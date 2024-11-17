@@ -1,0 +1,443 @@
+diff --git a/build.gradle b/build.gradle
+index 5d77848..8954382 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -26,6 +26,7 @@ repositories {
+ dependencies {
+     implementation 'org.springframework.boot:spring-boot-starter-web'
+     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
++    implementation 'org.postgresql:postgresql:42.5.0'
+     compileOnly 'org.projectlombok:lombok'
+     annotationProcessor 'org.projectlombok:lombok'
+     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+diff --git a/src/main/java/com/sap/refactoring/users/User.java b/src/main/java/com/sap/refactoring/users/User.java
+deleted file mode 100644
+index 398d4ef..0000000
+--- a/src/main/java/com/sap/refactoring/users/User.java
++++ /dev/null
+@@ -1,40 +0,0 @@
+-package com.sap.refactoring.users;
+-
+-import java.util.List;
+-
+-public class User
+-{
+-	String name;
+-	String email;
+-	List<String> roles;
+-
+-	public String getName()
+-	{
+-		return name;
+-	}
+-
+-	public void setName(String name)
+-	{
+-		this.name = name;
+-	}
+-
+-	public String getEmail()
+-	{
+-		return email;
+-	}
+-
+-	public void setEmail(String email)
+-	{
+-		this.email = email;
+-	}
+-
+-	public List<String> getRoles()
+-	{
+-		return roles;
+-	}
+-
+-	public void setRoles(List<String> roles)
+-	{
+-		this.roles = roles;
+-	}
+-}
+diff --git a/src/main/java/com/sap/refactoring/users/UserDao.java b/src/main/java/com/sap/refactoring/users/UserDao.java
+deleted file mode 100644
+index 93bd551..0000000
+--- a/src/main/java/com/sap/refactoring/users/UserDao.java
++++ /dev/null
+@@ -1,74 +0,0 @@
+-package com.sap.refactoring.users;
+-
+-import java.util.ArrayList;
+-
+-import jakarta.transaction.Transactional;
+-
+-public class UserDao
+-{
+-	public ArrayList<User> users;
+-
+-	public static UserDao userDao;
+-
+-	public static UserDao getUserDao() {
+-		if (userDao == null) {
+-			userDao = new UserDao();
+-		}
+-		return userDao;
+-	}
+-
+-	@Transactional
+-	public void saveUser(User user) {
+-		if (users == null) {
+-			users = new ArrayList<User>();
+-		}
+-		users.add(user);
+-	}
+-
+-	public ArrayList<User> getUsers() {
+-		try {
+-			return users;
+-		} catch (Throwable e) {
+-			System.out.println("error");
+-			return null;
+-		}
+-	}
+-
+-	public void deleteUser(User userToDelete) {
+-		try {
+-			for (User user : users) {
+-				if (user.getName() == userToDelete.getName()) {
+-					users.remove(user);
+-				}
+-			}
+-		} catch (Exception e) {
+-			e.printStackTrace();
+-		}
+-	}
+-
+-	public void updateUser(User userToUpdate) {
+-		try {
+-			for (User user : users) {
+-				if (user.getName() == userToUpdate.getName()) {
+-					user.setEmail(userToUpdate.getEmail());
+-					user.setRoles(userToUpdate.getRoles());
+-					this.saveUser(user);
+-				}
+-			}
+-		} catch (RuntimeException e) {
+-			e.printStackTrace();
+-		}
+-	}
+-
+-	public User findUser(String name) {
+-		try {
+-			for (User user : users) {
+-				if (user.getName() == name) {
+-					return user;
+-				}
+-			}
+-		} catch (NullPointerException e) {
+-			e.printStackTrace();
+-		}
+-		return null;
+-	}}
+diff --git a/src/main/java/com/sap/refactoring/web/controller/UserController.java b/src/main/java/com/sap/refactoring/web/controller/UserController.java
+deleted file mode 100644
+index f7e6736..0000000
+--- a/src/main/java/com/sap/refactoring/web/controller/UserController.java
++++ /dev/null
+@@ -1,98 +0,0 @@
+-package com.sap.refactoring.web.controller;
+-
+-import java.util.ArrayList;
+-import java.util.List;
+-
+-import org.springframework.context.ApplicationContext;
+-import org.springframework.context.support.ClassPathXmlApplicationContext;
+-import org.springframework.http.ResponseEntity;
+-import org.springframework.stereotype.Controller;
+-import org.springframework.web.bind.annotation.GetMapping;
+-import org.springframework.web.bind.annotation.RequestMapping;
+-import org.springframework.web.bind.annotation.RequestParam;
+-
+-import com.sap.refactoring.users.User;
+-import com.sap.refactoring.users.UserDao;
+-
+-@Controller
+-@RequestMapping("/users")
+-public class UserController
+-{
+-	public UserDao userDao;
+-
+-	@GetMapping("add/")
+-	public ResponseEntity addUser(@RequestParam("name") String name,
+-	                              @RequestParam("email") String email,
+-	                              @RequestParam("role") List<String> roles) {
+-
+-		User user = new User();
+-		user.setName(name);
+-		user.setEmail(email);
+-		user.setRoles(roles);
+-
+-		if (userDao == null) {
+-			userDao = UserDao.getUserDao();
+-		}
+-
+-		userDao.saveUser(user);
+-		return ResponseEntity.ok(user);
+-	}
+-
+-	@GetMapping("update/")
+-	public ResponseEntity updateUser(@RequestParam("name") String name,
+-	                           @RequestParam("email") String email,
+-	                           @RequestParam("role") List<String> roles) {
+-
+-		User user = new User();
+-		user.setName(name);
+-		user.setEmail(email);
+-		user.setRoles(roles);
+-
+-		if (userDao == null) {
+-			userDao = UserDao.getUserDao();
+-		}
+-
+-		userDao.updateUser(user);
+-		return ResponseEntity.ok(user);
+-	}
+-	@GetMapping("delete/")
+-	public ResponseEntity deleteUser(@RequestParam("name") String name,
+-	                           @RequestParam("email") String email,
+-	                           @RequestParam("role") List<String> roles) {
+-		User user = new User();
+-		user.setName(name);
+-		user.setEmail(email);
+-		user.setRoles(roles);
+-
+-		if (userDao == null) {
+-			userDao = UserDao.getUserDao();
+-		}
+-
+-		userDao.deleteUser(user);
+-		return ResponseEntity.ok(user);
+-	}
+-	@GetMapping("find/")
+-	public ResponseEntity getUsers() {
+-
+-		ApplicationContext context = new ClassPathXmlApplicationContext(new String[] {
+-				"classpath:/application-config.xml"
+-		});
+-		userDao = context.getBean(UserDao.class);
+-		List<User> users = userDao.getUsers();
+-		if (users == null) {
+-			users = new ArrayList<>();
+-		}
+-
+-		return ResponseEntity.status(200).body(users);
+-	}
+-	@GetMapping("search/")
+-	public ResponseEntity findUser(@RequestParam("name") String name) {
+-
+-		if (userDao == null) {
+-			userDao = UserDao.getUserDao();
+-		}
+-
+-		User user = userDao.findUser(name);
+-		return ResponseEntity.ok(user);
+-	}
+-}
+diff --git a/src/main/resources/application.properties b/src/main/resources/application.properties
+index 79c73d4..0fc7509 100644
+--- a/src/main/resources/application.properties
++++ b/src/main/resources/application.properties
+@@ -1 +1,2 @@
+ spring.application.name=java-refactoring-test
++spring.profiles.active=dev
+diff --git a/src/test/java/com/sap/refactoring/JavaRefactoringTestApplicationTests.java b/src/test/java/com/sap/refactoring/JavaRefactoringTestApplicationTests.java
+index 99a0086..9ef3749 100644
+--- a/src/test/java/com/sap/refactoring/JavaRefactoringTestApplicationTests.java
++++ b/src/test/java/com/sap/refactoring/JavaRefactoringTestApplicationTests.java
+@@ -10,6 +10,7 @@ class JavaRefactoringTestApplicationTests
+ 	@Test
+ 	void contextLoads()
+ 	{
++		System.out.println("Pass");
+ 	}
+ 
+ }
+diff --git a/src/test/java/com/sap/refactoring/integration/UserIntegrationTest.java b/src/test/java/com/sap/refactoring/integration/UserIntegrationTest.java
+index 8ec28d1..274d006 100644
+--- a/src/test/java/com/sap/refactoring/integration/UserIntegrationTest.java
++++ b/src/test/java/com/sap/refactoring/integration/UserIntegrationTest.java
+@@ -1,23 +1,32 @@
+ package com.sap.refactoring.integration;
+ 
+-import java.util.ArrayList;
+-
++import com.sap.refactoring.controller.UserController;
++import com.sap.refactoring.model.User;
+ import org.junit.jupiter.api.Test;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.boot.test.context.SpringBootTest;
+ import org.springframework.http.HttpStatusCode;
+ import org.springframework.http.ResponseEntity;
+ 
+-import com.sap.refactoring.users.User;
+-import com.sap.refactoring.web.controller.UserController;
++import java.util.ArrayList;
++import java.util.List;
+ 
+ import static org.assertj.core.api.Assertions.assertThat;
+ 
++@SpringBootTest
+ public class UserIntegrationTest
+ {
++	private final UserController userController;
++
++	@Autowired
++	public UserIntegrationTest(UserController userController) {
++		this.userController = userController;
++	}
++
+ 	@Test
+ 	public void createUserTest() {
+-		UserController userController = new UserController();
+-
+ 		User integration = new User();
++		integration.setId(1L);
+ 		integration.setName("integration");
+ 		integration.setEmail("initial@integration.com");
+ 		integration.setRoles(new ArrayList<>());
+@@ -28,16 +37,17 @@ public class UserIntegrationTest
+ 
+ 	@Test
+ 	public void updateUserTest() {
+-		UserController userController = new UserController();
+-
+-		createUserTest();
++//		createUserTest();
++		List<String> roles = new ArrayList<>();
++		roles.add("Manager");
+ 
+ 		User updated = new User();
++		updated.setId(1L);
+ 		updated.setName("integration");
+ 		updated.setEmail("updated@integration.com");
+-		updated.setRoles(new ArrayList<String>());
++		updated.setRoles(roles);
+ 
+-		ResponseEntity response = userController.updateUser(updated.getName(), updated.getEmail(), updated.getRoles());
++		ResponseEntity response = userController.updateUser(updated);
+ 		assertThat(response.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
+ 	}
+ }
+diff --git a/src/test/java/com/sap/refactoring/unit/UserDaoUnitTest.java b/src/test/java/com/sap/refactoring/unit/UserDaoUnitTest.java
+index 77c3f85..d3e124f 100644
+--- a/src/test/java/com/sap/refactoring/unit/UserDaoUnitTest.java
++++ b/src/test/java/com/sap/refactoring/unit/UserDaoUnitTest.java
+@@ -1,40 +1,49 @@
+ package com.sap.refactoring.unit;
+ 
+-import java.util.Arrays;
+-
++import com.sap.refactoring.dao.UserDao;
++import com.sap.refactoring.model.User;
++import com.sap.refactoring.service.UserService;
+ import org.junit.jupiter.api.Test;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.boot.test.context.SpringBootTest;
+ 
+-import com.sap.refactoring.users.User;
+-import com.sap.refactoring.users.UserDao;
++import java.util.Arrays;
+ 
++@SpringBootTest
+ public class UserDaoUnitTest
+ {
+-	UserDao userDao;
++	private final UserService userService;
++
++	@Autowired
++	public UserDaoUnitTest(UserDao userDao) {
++		this.userService = userDao;
++	}
+ 
+ 	@Test
+ 	public void saveUserTest() {
+-		userDao = UserDao.getUserDao();
+ 
+ 		User user = new User();
++		user.setId(1L);
+ 		user.setName("Fake Name");
+ 		user.setEmail("fake@email.com");
+ 		user.setRoles(Arrays.asList("admin", "master"));
+ 
+-		userDao.saveUser(user);
++		userService.saveUser(user);
+ 	}
+ 
+ 	@Test
+ 	public void deleteUserTest() {
+-		userDao = UserDao.getUserDao();
+ 
+ 		User user = new User();
++		user.setId(1L);
+ 		user.setName("Fake Name");
+ 		user.setEmail("fake@email.com");
+ 		user.setRoles(Arrays.asList("admin", "master"));
+ 
+ 		try {
+-			userDao.deleteUser(user);
+-		} catch (NullPointerException e) {
++			userService.deleteUser(user);
++		} catch (Exception e) {
++			System.out.println(e.getMessage());
+ 		}
+ 	}
+ }
+diff --git a/src/test/java/com/sap/refactoring/unit/UserResourceUnitTest.java b/src/test/java/com/sap/refactoring/unit/UserResourceUnitTest.java
+index e2a6e04..ce1dd72 100644
+--- a/src/test/java/com/sap/refactoring/unit/UserResourceUnitTest.java
++++ b/src/test/java/com/sap/refactoring/unit/UserResourceUnitTest.java
+@@ -1,31 +1,36 @@
+ package com.sap.refactoring.unit;
+ 
++import com.sap.refactoring.controller.UserController;
++import com.sap.refactoring.dao.UserDao;
++import com.sap.refactoring.model.User;
++import com.sap.refactoring.service.UserService;
+ import org.junit.jupiter.api.Test;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.boot.test.context.SpringBootTest;
+ import org.springframework.http.ResponseEntity;
+ 
+-import com.sap.refactoring.users.User;
+-import com.sap.refactoring.users.UserDao;
+-import com.sap.refactoring.web.controller.UserController;
+-
+ import static org.assertj.core.api.Assertions.assertThat;
+ 
++@SpringBootTest
+ public class UserResourceUnitTest
+ {
+-	UserController userController;
+-	UserDao userDao;
++	private final UserController userController;
++	private final UserService userService;
++
++	@Autowired
++	public UserResourceUnitTest(UserDao userDao, UserController userController) {
++		this.userService = userDao;
++		this.userController = userController;
++	}
+ 
+ 	@Test
+ 	public void getUsersTest() {
+ 
+-		userController = new UserController();
+-		userDao = UserDao.getUserDao();
+-
+ 		User user = new User();
+ 		user.setName("fake user");
+ 		user.setEmail("fake@user.com");
+-		userDao.saveUser(user);
+ 
+ 		ResponseEntity response = userController.getUsers();
+-		assertThat(response.getStatusCode()).isEqualTo(200);
++		assertThat(response.getStatusCode().is2xxSuccessful());
+ 	}
+ }

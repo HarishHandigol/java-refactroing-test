@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.sap.refactoring.JavaRefactoringTestApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-11-17T05:52:20" hostname="CA-C02FN7UDMD6R" time="0.438">
+  <properties/>
+  <testcase name="contextLoads()" classname="com.sap.refactoring.JavaRefactoringTestApplicationTests" time="0.438"/>
+  <system-out><![CDATA[00:52:16.710 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.sap.refactoring.JavaRefactoringTestApplicationTests]: JavaRefactoringTestApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+00:52:16.783 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.sap.refactoring.JavaRefactoringTestApplication for test class com.sap.refactoring.JavaRefactoringTestApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.4)
+
+2024-11-17T00:52:17.108-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] .s.r.JavaRefactoringTestApplicationTests : Starting JavaRefactoringTestApplicationTests using Java 17.0.2 with PID 17015 (started by harish.handigol in /Users/harish.handigol/Documents/spring_boot/sap/java-refactroing-test)
+2024-11-17T00:52:17.110-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] .s.r.JavaRefactoringTestApplicationTests : The following 1 profile is active: "dev"
+2024-11-17T00:52:17.603-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-17T00:52:17.649-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 39 ms. Found 1 JPA repository interface.
+2024-11-17T00:52:17.974-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-11-17T00:52:18.131-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@22a260ff
+2024-11-17T00:52:18.133-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-11-17T00:52:18.235-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-17T00:52:18.280-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-11-17T00:52:18.312-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-11-17T00:52:18.595-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-11-17T00:52:19.288-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-11-17T00:52:19.291-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-17T00:52:19.684-05:00  WARN 17015 --- [java-refactoring-test] [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-11-17T00:52:20.026-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] .s.r.JavaRefactoringTestApplicationTests : Started JavaRefactoringTestApplicationTests in 3.136 seconds (process running for 3.906)
+Pass
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

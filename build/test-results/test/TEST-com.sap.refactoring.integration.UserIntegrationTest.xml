@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.sap.refactoring.integration.UserIntegrationTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2024-11-17T05:52:20" hostname="CA-C02FN7UDMD6R" time="0.171">
+  <properties/>
+  <testcase name="updateUserTest()" classname="com.sap.refactoring.integration.UserIntegrationTest" time="0.148"/>
+  <testcase name="createUserTest()" classname="com.sap.refactoring.integration.UserIntegrationTest" time="0.022"/>
+  <system-out><![CDATA[2024-11-17T00:52:20.483-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sap.refactoring.integration.UserIntegrationTest]: UserIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-11-17T00:52:20.489-05:00  INFO 17015 --- [java-refactoring-test] [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.sap.refactoring.JavaRefactoringTestApplication for test class com.sap.refactoring.integration.UserIntegrationTest
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

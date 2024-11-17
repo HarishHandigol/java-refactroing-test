@@ -1,0 +1,10 @@
+server:
+  port: 8086
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sap
+    username: postgres
+    password: password
+  sql:
+    init:
+      mode: always
